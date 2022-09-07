@@ -1,7 +1,7 @@
-mod terminal_mangament;
+mod terminal_management;
 
 use clap::Parser;
-use terminal_mangament::TerminalManager;
+use terminal_management::TerminalManager;
 
 /// Args to the program
 #[derive(Parser, Debug)]
