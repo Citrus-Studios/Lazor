@@ -6,5 +6,5 @@ impl TerminalManager {
         Self {}
     }
 
-    pub fn run(function: fn() -> anyhow::Result<()>) {}
+    pub fn run(self, function: fn() -> anyhow::Result<()>) {}
 }
