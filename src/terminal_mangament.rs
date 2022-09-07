@@ -5,4 +5,6 @@ impl TerminalManager {
     pub fn new() -> Self {
         Self {}
     }
+
+    pub fn run(function: fn() -> anyhow::Result<()>) {}
 }
