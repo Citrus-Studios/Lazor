@@ -1,3 +1,5 @@
+mod terminal_mangament;
+
 use clap::Parser;
 
 /// Args to the program
