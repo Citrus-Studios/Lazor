@@ -1,6 +1,7 @@
 mod terminal_mangament;
 
 use clap::Parser;
+use terminal_mangament::TerminalManager;
 
 /// Args to the program
 #[derive(Parser, Debug)]
@@ -12,4 +13,6 @@ pub struct Args {
 
 fn main() {
     let args = Args::parse();
+
+    TerminalManager::new().run(|| Ok(()));
 }
