@@ -4,7 +4,7 @@ use std::io::stdout;
 
 use crossterm::{
     execute,
-    terminal::{enable_raw_mode, Clear, ClearType},
+    terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
 };
 
 /// This struct is used for managing the terminal
@@ -26,5 +26,12 @@ impl TerminalManager {
         loop {
             function().unwrap();
         }
+    }
+}
+
+// Destroys the struct and reverts terminal
+impl Drop for TerminalManager {
+    fn drop(&mut self) {
+        disable_raw_mode();
     }
 }
