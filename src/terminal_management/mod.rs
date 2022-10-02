@@ -22,6 +22,7 @@ impl TerminalManager {
 
     // Runs the event loop for the terminal
     pub fn run(&mut self, function: fn() -> anyhow::Result<()>) {
+        self.prepare();
         loop {
             function().unwrap();
         }
