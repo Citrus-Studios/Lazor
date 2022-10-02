@@ -5,6 +5,8 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
 };
 
+pub mod callbacks;
+
 /// This struct is used for managing the terminal
 pub struct TerminalManager {}
 
