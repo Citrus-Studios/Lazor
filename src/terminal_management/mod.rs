@@ -10,20 +10,27 @@ pub mod callbacks;
 /// This struct is used for managing the terminal
 pub struct TerminalManager {}
 
-impl TerminalManager {
-    pub fn new() -> Self {
+impl TerminalManager 
+{
+    pub 
+    fn new () 
+    -> Self 
+    {
         Self {}
     }
 
     // Prepares the terminal
-    fn prepare(&mut self) {
+    fn prepare (&mut self) 
+    {
         // enter raw mode and clear the screen and moves cursor to 0, 0
         enable_raw_mode();
         execute!(stdout(), Clear(ClearType::All), cursor::MoveTo(0, 0)).unwrap();
     }
 
     // Runs the event loop for the terminal
-    pub fn run(&mut self, function: fn() -> anyhow::Result<()>) {
+    pub 
+    fn run (&mut self, function: fn() -> anyhow::Result<()>) 
+    {
         self.prepare();
         loop {
             function().unwrap();
@@ -32,8 +39,10 @@ impl TerminalManager {
 }
 
 // Destroys the struct and reverts terminal
-impl Drop for TerminalManager {
-    fn drop(&mut self) {
+impl Drop for TerminalManager 
+{
+    fn drop (&mut self) 
+    {
         disable_raw_mode();
     }
 }
