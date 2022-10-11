@@ -1,6 +1,7 @@
 use std::{
     cmp::{max, min},
     io::stdout,
+    marker::PhantomData,
     process::exit,
 };
 
@@ -11,19 +12,28 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
 };
 
+use crate::Args;
+
 use self::callbacks::Callbacks;
 
 pub mod callbacks;
 
 /// This struct is used for managing the terminal
-pub struct TerminalManager {
+pub struct TerminalManager<'a> {
     x: u16,
     y: u16,
+    args: &'a Args,
+    _marker: PhantomData<&'a Args>,
 }
 
-impl TerminalManager {
-    pub fn new() -> Self {
-        Self { x: 0, y: 0 }
+impl<'a> TerminalManager<'a> {
+    pub fn new(args: &'a Args) -> Self {
+        Self {
+            x: 0,
+            y: 0,
+            args,
+            _marker: PhantomData,
+        }
     }
 
     // Prepares the terminal
@@ -38,10 +48,10 @@ impl TerminalManager {
     }
 
     // Runs the event loop for the terminal
-    pub fn run(&mut self, function: fn(Event) -> anyhow::Result<Callbacks>) {
+    pub fn run(&mut self, function: fn(Event, &'a Args) -> anyhow::Result<Callbacks>) {
         self.prepare();
         loop {
-            for x in function(read().unwrap()).unwrap() {
+            for x in function(read().unwrap(), self.args).unwrap() {
                 match x {
                     callbacks::Callback::Print(msg) => {
                         print!("{}", msg);
@@ -66,7 +76,7 @@ impl TerminalManager {
 }
 
 // Destroys the struct and reverts terminal
-impl Drop for TerminalManager {
+impl<'a> Drop for TerminalManager<'a> {
     fn drop(&mut self) {
         disable_raw_mode();
     }
