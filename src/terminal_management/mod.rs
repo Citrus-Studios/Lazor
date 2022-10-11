@@ -1,18 +1,25 @@
-use std::io::stdout;
+use std::{io::stdout, process::exit};
 
 use crossterm::{
-    cursor, execute,
+    cursor,
+    event::{read, Event},
+    execute,
     terminal::{disable_raw_mode, enable_raw_mode, Clear, ClearType},
 };
+
+use self::callbacks::Callbacks;
 
 pub mod callbacks;
 
 /// This struct is used for managing the terminal
-pub struct TerminalManager {}
+pub struct TerminalManager {
+    x: u16,
+    y: u16,
+}
 
 impl TerminalManager {
     pub fn new() -> Self {
-        Self {}
+        Self { x: 0, y: 0 }
     }
 
     // Prepares the terminal
@@ -22,11 +29,26 @@ impl TerminalManager {
         execute!(stdout(), Clear(ClearType::All), cursor::MoveTo(0, 0)).unwrap();
     }
 
+    fn tasks(&mut self) {
+        execute!(stdout(), cursor::MoveTo(self.x, self.y)).unwrap();
+    }
+
     // Runs the event loop for the terminal
-    pub fn run(&mut self, function: fn() -> anyhow::Result<()>) {
+    pub fn run(&mut self, function: fn(Event) -> anyhow::Result<Callbacks>) {
         self.prepare();
         loop {
-            function().unwrap();
+            for x in function(read().unwrap()).unwrap() {
+                match x {
+                    callbacks::Callback::Print(msg) => {
+                        print!("{}", msg);
+                    }
+                    callbacks::Callback::Goto(x, y) => {
+                        self.x = x;
+                        self.y = y;
+                    }
+                    callbacks::Callback::Quit(x) => exit(x),
+                }
+            }
         }
     }
 }
