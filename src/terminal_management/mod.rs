@@ -1,4 +1,8 @@
-use std::{io::stdout, process::exit};
+use std::{
+    cmp::{max, min},
+    io::stdout,
+    process::exit,
+};
 
 use crossterm::{
     cursor,
@@ -42,12 +46,20 @@ impl TerminalManager {
                     callbacks::Callback::Print(msg) => {
                         print!("{}", msg);
                     }
-                    callbacks::Callback::Goto(x, y) => {
+                    callbacks::Callback::Quit(x) => exit(x),
+                    callbacks::Callback::MoveTo(x, y) => {
                         self.x = x;
                         self.y = y;
                     }
-                    callbacks::Callback::Quit(x) => exit(x),
+                    callbacks::Callback::MoveBy(x, y) => {
+                        let tmp_x = self.x as i32 + x;
+                        let tmp_y = self.y as i32 + y;
+
+                        self.x = min(max(tmp_x, 0), u16::MAX as i32) as u16;
+                        self.y = min(max(tmp_y, 0), u16::MAX as i32) as u16;
+                    }
                 }
+                self.tasks();
             }
         }
     }

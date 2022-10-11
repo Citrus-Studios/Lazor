@@ -19,6 +19,10 @@ fn main() {
     TerminalManager::new().run(|event| match event {
         Event::Key(k) => match (k.code, k.modifiers) {
             (KeyCode::Char('q'), _) => Ok(vec![Callback::Quit(0)]),
+            (KeyCode::Char('w'), _) => Ok(vec![Callback::MoveBy(0, -1)]),
+            (KeyCode::Char('s'), _) => Ok(vec![Callback::MoveBy(0, 1)]),
+            (KeyCode::Char('a'), _) => Ok(vec![Callback::MoveBy(-1, 0)]),
+            (KeyCode::Char('d'), _) => Ok(vec![Callback::MoveBy(1, 0)]),
             _ => Ok(vec![]),
         },
         _ => Ok(vec![]),
