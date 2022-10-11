@@ -1,6 +1,6 @@
 pub enum Layout {
-    Qwerty_EN_US,
-    Dvorak_Programmers,
+    QwertyENUS,
+    DvorakProgrammers,
 }
 
 pub const DVORAK_PROGRAMMERS: phf::Map<char, char> = phf_map! {
@@ -103,8 +103,8 @@ pub const DVORAK_PROGRAMMERS: phf::Map<char, char> = phf_map! {
 impl Layout {
 	fn get(&self, ch: char) -> char {
 		match self {
-			Layout::Qwerty_EN_US => ch,
-			Layout::Dvorak_Programmers => DVORAK_PROGRAMMERS.get(&ch).unwrap(),
+			Layout::QwertyENUS => ch,
+			Layout::DvorakProgrammers => DVORAK_PROGRAMMERS.get(&ch).unwrap(),
 		}
 	}
 }
